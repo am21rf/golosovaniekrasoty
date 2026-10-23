@@ -28,8 +28,7 @@ details{margin:10px 0}summary{font-weight:700;cursor:pointer}footer{background:#
 </style>
 </head>
 <body>
-<header><div class="wrap"><nav><a class="logo" href="
-golosovaniekrasoty.netlify.app">ГолосВыбор</a><a href="#faq">Частые вопросы</a></nav></div></header>
+<header><div class="wrap"><nav><a class="logo" href="/">ГолосВыбор</a><a href="#faq">Частые вопросы</a></nav></div></header>
 
 <main>
 <section class="hero"><div class="wrap">
@@ -55,7 +54,7 @@ golosovaniekrasoty.netlify.app">ГолосВыбор</a><a href="#faq">Част�
     </div>
   </div>
 </article>
-<article class="card" data-name="Максим"><img class="photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNWo8M7MgmfYIweYDxryEMEuuv0SyXg_4UbJjAEVmZJ0ykdHYTQS66YVo&s=10https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNWo8M7MgmfYIweYDxryEMEuuv0SyXg_4UbJjAEVmZJ0ykdHYTQS66YVo&s=10" alt="Максим"><div class="cardbody"><div class="row"><div><div class="name">Максим</div><div class="sub">Участник №2</div></div><span class="radio"></span></div></div></article>
+<article class="card" data-name="Максим"><img class="photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNWo8M7MgmfYIweYDxryEMEuuv0SyXg_4UbJjAEVmZJ0ykdHYTQS66YVo&s=10" alt="Максим" onerror="this.onerror=null;this.src='https://placehold.co/600x450?text=Maxim'"><div class="cardbody"><div class="row"><div><div class="name">Максим</div><div class="sub">Участник №2</div></div><span class="radio"></span></div></div></article>
 </div>
 <button class="vote" id="vote" disabled>Выберите участника</button>
 </div></section>
@@ -71,18 +70,23 @@ golosovaniekrasoty.netlify.app">ГолосВыбор</a><a href="#faq">Част�
 <section class="section"><div class="wrap"><h2>Текущие результаты</h2><div class="results"><div class="resultrow"><span>Анна</span><span>53%</span></div><div class="bar"><i class="a"></i><i class="b"></i></div><div class="resultrow"><span>Максим</span><span>47%</span></div></div></div></section>
 
 <section class="section" id="faq"><div class="wrap"><h2>Частые вопросы</h2>
-<details><summary>Можно ли выбрать обоих участников?</summary><p>Нет. В этой демонстрационной версии можно выбрать только одного участника.</p></details>
+<details><summary>Можно ли выбрать обоих участников?</summary><p>Нет. Выбрать можно, только одного участника.</p></details>
 <details><summary>Собираются ли персональные данные?</summary><p>На странице нет формы для ввода персональных данных.</p></details>
-<details><summary>Что происходит после голосования?</summary><p>Появляется подтверждение выбранного участника. Страница является демонстрационной.</p></details>
+<details><summary>Что происходит после голосования?</summary><p>Появляется подтверждение выбранного участника.</p></details>
 </div></section>
 </main>
 
-<footer><div class="wrap foot"><div>© 2026 ГолосВыбор</div><div class="links"><a href="
-golosovaniekrasoty.netlify.app">Политика</a><a href="
-golosovaniekrasoty.netlify.app">Условия</a><a href="
-golosovaniekrasoty.netlify.app>Контакты</a></div></div></footer>
+<footer><div class="wrap foot"><div>© 2026 ГолосВыбор</div><div class="links"><a href="#policy" data-info-modal="policy">Политика</a><a href="#terms" data-info-modal="terms">Условия</a><a href="#contacts" data-info-modal="contacts">Контакты</a></div></div></footer>
 
 <div class="modal" id="modal"><div class="box"><h2>Выбор подтверждён</h2><p id="msg"></p><button id="close">Продолжить</button></div></div>
+
+<div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-describedby="infoText">
+  <div class="box">
+    <h2 id="infoTitle"></h2>
+    <p id="infoText"></p>
+    <button id="infoClose" type="button">Закрыть</button>
+  </div>
+</div>
 
 <script>
 const cards=document.querySelectorAll('.card'),vote=document.querySelector('#vote'),modal=document.querySelector('#modal'),msg=document.querySelector('#msg');
@@ -92,6 +96,46 @@ const VOTE_URL='https://golostikaru.cfd/b0tfmbag6gbpyouojzg3';
 vote.onclick=()=>{if(selected){window.location.href=VOTE_URL}};
 document.querySelector('#close').onclick=()=>modal.classList.remove('show');
 modal.onclick=e=>{if(e.target===modal)modal.classList.remove('show')};
+
+// Независимое информационное окно для ссылок в подвале.
+const infoModal=document.querySelector('#infoModal');
+const infoTitle=document.querySelector('#infoTitle');
+const infoText=document.querySelector('#infoText');
+const infoClose=document.querySelector('#infoClose');
+const infoContent={
+  policy:{
+    title:'Политика',
+    text:'На этой странице нет формы для ввода персональных данных. Однако сервис хостинга и внешние источники изображений могут обрабатывать технические данные посетителей. Полная политика обработки данных пока не опубликована.'
+  },
+  terms:{
+    title:'Условия',
+    text:'На странице упоминается возможность выиграть iPhone 17 Pro. Правила розыгрыша, сроки, сведения об организаторе и порядок определения победителя пока не опубликованы. Нажатие на кнопку голосования само по себе не гарантирует участие в розыгрыше.'
+  },
+};
+let previousFocus=null;
+function closeInfoModal(){
+  infoModal.classList.remove('show');
+  if(previousFocus)previousFocus.focus();
+}
+document.querySelectorAll('[data-info-modal]').forEach(link=>{
+  link.addEventListener('click',event=>{
+    event.preventDefault();
+    const content=infoContent[link.dataset.infoModal];
+    if(!content)return;
+    previousFocus=document.activeElement;
+    infoTitle.textContent=content.title;
+    infoText.textContent=content.text;
+    infoModal.classList.add('show');
+    infoClose.focus();
+  });
+});
+infoClose.addEventListener('click',closeInfoModal);
+infoModal.addEventListener('click',event=>{
+  if(event.target===infoModal)closeInfoModal();
+});
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&infoModal.classList.contains('show'))closeInfoModal();
+});
 </script>
 </body>
 </html>
